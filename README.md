@@ -1,7 +1,6 @@
 # Go Projects
 
-- Project idea by [Dreams of code ](https://www.youtube.com/@dreamsofcode)
-  This repository contains several Go projects created to practice and improve Go programming skills. Each project focuses on different aspects of Go development, including CLI applications, web APIs, and backend development.
+- Project idea by [Dreams of code ](https://www.youtube.com/@dreamsofcode),this repository contains several Go projects created to practice and improve Go programming skills. Each project focuses on different aspects of Go development, including CLI applications, web APIs, and backend development.
 
 ## Projects
 
