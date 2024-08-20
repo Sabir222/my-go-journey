@@ -1,28 +1,15 @@
 package server
 
 import (
-	"encoding/json"
-	"log"
 	"net/http"
+	"sabir222/http-calculator/internal/handler"
 )
 
 func RegisterRoutes() http.Handler {
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", HelloWorldHandler)
+	mux.HandleFunc("/", handler.HelloWorldHandler)
+	mux.HandleFunc("/user", handler.UserHandler)
+	mux.HandleFunc("/req", handler.SubstractionHandler)
 	return mux
-}
-
-func HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
-	resp := make(map[string]string)
-	resp["Message"] = "Hello World!"
-
-	jsonResp, err := json.Marshal(resp)
-
-	if err != nil {
-		log.Fatalf("Error handling JSON marshal. Err:%v", err)
-	}
-
-	_, _ = w.Write(jsonResp)
-
 }
