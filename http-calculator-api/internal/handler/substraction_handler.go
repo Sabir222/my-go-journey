@@ -2,13 +2,11 @@ package handler
 
 import (
 	"encoding/json"
-	"os"
-	//"io"
-	"github.com/go-playground/validator/v10"
-	//"log"
 	"fmt"
+	"github.com/go-playground/validator/v10"
 	"log/slog"
 	"net/http"
+	"os"
 )
 
 var logger = slog.New(slog.NewTextHandler(os.Stdout, nil))

@@ -4,6 +4,7 @@ import (
 	"github.com/rs/cors"
 	"net/http"
 	"sabir222/http-calculator/internal/handler"
+	"sabir222/http-calculator/internal/middleware"
 )
 
 func RegisterRoutes() http.Handler {
@@ -20,5 +21,7 @@ func RegisterRoutes() http.Handler {
 		AllowCredentials: true,
 	})
 
-	return corsMiddleware.Handler(mux)
+	timerMiddleware := middleware.Time_stam
+
+	return timerMiddleware(corsMiddleware.Handler(mux))
 }
