@@ -12,7 +12,7 @@ func RegisterRoutes() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", handler.HelloWorldHandler)
 	mux.HandleFunc("/user", handler.UserHandler)
-	mux.HandleFunc(" POST /sub", handler.SubstractionHandler)
+	mux.HandleFunc("/sub", handler.SubstractionHandler)
 
 	corsMiddleware := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
