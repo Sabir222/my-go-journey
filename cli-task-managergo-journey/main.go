@@ -4,11 +4,10 @@ import (
 	"bufio"
 	"database/sql"
 	"fmt"
+	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"os"
 	"strconv"
-
-	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
@@ -27,11 +26,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	createTaskDb(db)
+	CreateTaskDb(db)
 
 	reader := bufio.NewScanner(os.Stdin)
 
 	for {
+		fmt.Println("\n ")
 		fmt.Println("\nChoose Option : ")
 		fmt.Println("1: Add task")
 		fmt.Println("2: List task")
@@ -44,18 +44,60 @@ func main() {
 
 		switch option {
 		case "1":
+			ClearCli()
 			fmt.Println("\nEnter the task description")
 			reader.Scan()
 			description := reader.Text()
-			insertTask(db, description)
+			ClearCli()
+			InsertTask(db, description)
 		case "2":
-			listTasks(db)
+			ClearCli()
+			ListTasks(db)
 		case "3":
+			ClearCli()
 			fmt.Println("\nWhat do you want to update: ")
-			fmt.Println("1: Mark as Complete/Incomplete")
-			fmt.Println("2: Modify task")
-			fmt.Println("")
+			fmt.Println("1: Modify task")
+			fmt.Println("2: Mark as Complete/Incomplete")
+			reader.Scan()
+			option := reader.Text()
+			if option == "1" {
+				ClearCli()
+				ListTasks(db)
+				fmt.Println("\nPlease choose the id of task you want to modify: ")
+				reader.Scan()
+				id := reader.Text()
+				intId, err := strconv.Atoi(id)
+				if err != nil {
+					log.Fatal("Invalid input: ", err)
+				}
+				ClearCli()
+				fmt.Printf("\nYou choose id number %d", intId)
+				fmt.Println("\nWhat's the new description ? ")
+				reader.Scan()
+				newDesc := reader.Text()
+				ClearCli()
+				ModifyTask(db, newDesc, uint(intId))
+
+			} else if option == "2" {
+				ClearCli()
+				ListTasks(db)
+				fmt.Println("What id of the task you want to mark as complete/incomplete ?")
+				reader.Scan()
+				id := reader.Text()
+				intId, err := strconv.Atoi(id)
+				if err != nil {
+					log.Fatal("Invalid input: ", err)
+				}
+				ClearCli()
+				MarkAsDoneUnDone(db, uint(intId))
+			} else {
+				fmt.Println("invalid option")
+				return
+			}
+
 		case "4":
+			ClearCli()
+			ListTasks(db)
 			fmt.Println("\nEnter the id of the task or type 0 if you want to remove them all: ")
 			reader.Scan()
 
@@ -66,98 +108,15 @@ func main() {
 			}
 
 			if intCmd == 0 {
-				resetDataBase(db)
+				ClearCli()
+				ResetDataBase(db)
 			}
-
-			removeTask(db, uint(intCmd))
+			ClearCli()
+			RemoveTask(db, uint(intCmd))
 		case "5":
+			ClearCli()
 			return
 		}
 	}
 
-}
-
-func createTaskDb(db *sql.DB) {
-	query := `
-	CREATE TABLE IF NOT EXISTS tasks (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	description TEXT,
-	status CHAR(1) DEFAULT '✗' CHECK (status IN ('✗','✓')),
-	date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-	);`
-
-	_, err := db.Exec(query)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("Task table created successfully")
-}
-
-func insertTask(db *sql.DB, desc string) {
-	query := `INSERT INTO tasks (description,status) VALUES (?,?)`
-	_, err := db.Exec(query, desc, "✗")
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("\nInserted task: %s\n", desc)
-}
-
-func resetDataBase(db *sql.DB) {
-	query := "DELETE FROM tasks;"
-	_, err := db.Exec(query)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("All tasks were deleted successfully")
-}
-
-func listTasks(db *sql.DB) {
-	query := `SELECT * FROM tasks;`
-
-	rows, err := db.Query(query)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer rows.Close()
-
-	for rows.Next() {
-
-		var id uint
-		var description string
-		var status string
-
-		err = rows.Scan(&id, &description, &status)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		fmt.Printf("\nid: %d | description: %s | status: %s", id, description, status)
-	}
-
-	if err = rows.Err(); err != nil {
-		log.Fatal(err)
-	}
-}
-
-func removeTask(db *sql.DB, id uint) {
-	query := `DELETE FROM tasks WHERE id = ?`
-
-	result, err := db.Exec(query, id)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	rows, err := result.RowsAffected()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if rows == 0 {
-		fmt.Printf("Task with id %d not found", id)
-	} else {
-		fmt.Printf("Task with id: %d removed successfully", id)
-	}
 }
