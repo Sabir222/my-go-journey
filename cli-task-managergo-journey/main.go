@@ -14,6 +14,8 @@ import (
 
 func main() {
 
+	args := os.Args
+
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		log.Fatal(err)
@@ -36,6 +38,39 @@ func main() {
 	}
 
 	CreateTaskDb(db)
+
+	if len(args) > 1 {
+		switch args[1] {
+		case "--list", "-l":
+			ListTasks(db)
+			return
+		case "-a", "--add":
+			InsertTask(db, args[2])
+			return
+		case "-d", "--delete":
+			id, err := strconv.Atoi(args[2])
+			if err != nil {
+				log.Fatal(err)
+			}
+			if id == 0 {
+				ResetDataBase(db)
+			}
+			RemoveTask(db, uint(id))
+			return
+		case "-h", "--help":
+
+			fmt.Println("Usage : tasks [option] [arguments]")
+			fmt.Println("Options:")
+			fmt.Println("-l, --list\t\tList all tasks")
+			fmt.Println("-a, --add [task]\tAdd a new task. Provide the task description")
+			fmt.Println("-d, --delete [id]\tDelete a task by its ID. Use 0 to reset the database")
+			fmt.Println("-h, --help\t\tDisplay this help message")
+
+			return
+		default:
+			log.Fatal("Invalid arguments run tasks -h or --help for more informations")
+		}
+	}
 	ListTasks(db)
 	reader := bufio.NewScanner(os.Stdin)
 
