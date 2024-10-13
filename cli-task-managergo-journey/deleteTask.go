@@ -29,8 +29,8 @@ func RemoveTask(db *sql.DB, id uint) {
 	}
 
 	if rows == 0 {
-		fmt.Printf("Task with id %d not found", id)
+		fmt.Printf("Task with id %d not found\n", id)
 	} else {
-		fmt.Printf("Task with id: %d removed successfully", id)
+		fmt.Printf("Task with id: %d removed successfully\n", id)
 	}
 }
