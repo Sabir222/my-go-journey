@@ -27,7 +27,7 @@ func main() {
 	}
 
 	CreateTaskDb(db)
-
+	ListTasks(db)
 	reader := bufio.NewScanner(os.Stdin)
 
 	for {

@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 )
 
@@ -19,6 +18,4 @@ func CreateTaskDb(db *sql.DB) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Println("Task table created successfully")
 }
