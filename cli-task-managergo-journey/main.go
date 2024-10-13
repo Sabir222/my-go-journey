@@ -4,14 +4,23 @@ import (
 	"bufio"
 	"database/sql"
 	"fmt"
-	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"os"
+	"path/filepath"
 	"strconv"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
-	db, err := sql.Open("sqlite3", "~/tasks.db")
+
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	dbPath := filepath.Join(homeDir, "tasks.db")
+	db, err := sql.Open("sqlite3", dbPath)
 
 	if err != nil {
 		log.Fatal(err)
