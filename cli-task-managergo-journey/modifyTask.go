@@ -7,12 +7,12 @@ import (
 )
 
 func MarkAsDoneUnDone(db *sql.DB, id uint) {
-
 	query := `
 	UPDATE tasks
 	SET status = CASE
 		WHEN status = '✗' THEN '✓'
-		ELSE ''
+		WHEN status = '✓' THEN '✗'
+		ELSE '✗'
 	END
 	WHERE id = ?;
 	`
