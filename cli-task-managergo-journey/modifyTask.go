@@ -12,7 +12,7 @@ func MarkAsDoneUnDone(db *sql.DB, id uint) {
 	SET status = CASE
 		WHEN status = '✗' THEN '✓'
 		WHEN status = '✓' THEN '✗'
-		ELSE '✗'
+		ELSE status
 	END
 	WHERE id = ?;
 	`
