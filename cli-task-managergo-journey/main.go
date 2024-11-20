@@ -68,7 +68,7 @@ func main() {
 
 			return
 		default:
-			log.Fatal("Invalid arguments run tasks -h or --help for more informations")
+			log.Fatal("Invalid arguments run tasks -h or --help for more information")
 		}
 	}
 	ListTasks(db)
