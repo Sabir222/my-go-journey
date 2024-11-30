@@ -13,7 +13,6 @@ import (
 )
 
 func main() {
-
 	args := os.Args
 
 	homeDir, err := os.UserHomeDir()
@@ -23,7 +22,6 @@ func main() {
 
 	dbPath := filepath.Join(homeDir, "tasks.db")
 	db, err := sql.Open("sqlite3", dbPath)
-
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -162,5 +160,4 @@ func main() {
 			return
 		}
 	}
-
 }
